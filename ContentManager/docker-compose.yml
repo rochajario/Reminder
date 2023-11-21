@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  contentmanager.api:
+    image: ${DOCKER_REGISTRY-}contentmanagerapi
+    build:
+      context: .
+      dockerfile: ContentManager.Api/Dockerfile
+
+  contentmanager.worker:
+    image: ${DOCKER_REGISTRY-}contentmanagerworker
+    build:
+      context: .
+      dockerfile: ContentManager.Worker/Dockerfile
+

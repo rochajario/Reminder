@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  channelmanager.api:
+    image: ${DOCKER_REGISTRY-}channelmanagerapi
+    build:
+      context: .
+      dockerfile: ChannelManager.Api/Dockerfile
+
+  channelmanager.worker:
+    image: ${DOCKER_REGISTRY-}channelmanagerworker
+    build:
+      context: .
+      dockerfile: ChannelManager.Worker/Dockerfile
+
