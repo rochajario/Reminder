@@ -2,13 +2,17 @@ version: '3.4'
 
 services:
   channelmanager.api:
-    image: ${DOCKER_REGISTRY-}channelmanagerapi
+    image: ${DOCKER_REGISTRY-}channel-manager-api
+    container_name: ChannelManager-API
     build:
       context: .
       dockerfile: ChannelManager.Api/Dockerfile
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
 
   channelmanager.worker:
-    image: ${DOCKER_REGISTRY-}channelmanagerworker
+    image: ${DOCKER_REGISTRY-}channel-manager-worker
+    container_name: ChannelManager-WS
     build:
       context: .
       dockerfile: ChannelManager.Worker/Dockerfile

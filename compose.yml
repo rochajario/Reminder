@@ -1,0 +1,97 @@
+version: '3.4'
+
+networks:
+  default:
+    driver: bridge
+
+services:
+
+  #General Infrastructure components setup
+  rabbitmq:
+    image: rabbitmq:3.13-rc-alpine
+    container_name: RabbitMQ
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  #User Management Micro Service Configuration
+  user-manager-api:
+    restart: always
+    container_name: UserManager-API
+    extends:
+      file: ./UserManager/docker-compose.yml
+      service: usermanager.api
+    environment:
+      - ConnectionStrings:Database=server=${DB_HOST};database=UserManagement;user=${DB_USER};password=${DB_PASSWORD}
+      - JwtKey=${JWT_KEY}
+    ports:
+      - 5000:8080
+
+  #Content Management Micro Services Configuration
+  content-manager-api:
+    restart: always
+    container_name: ContentManager-API
+    extends:
+      file: ./ContentManager/docker-compose.yml
+      service: contentmanager.api
+    depends_on:
+      rabbitmq:
+        condition: service_started
+        restart: true
+    environment:
+      - ConnectionStrings:Database=server=${DB_HOST};database=ContentManagement;user=${DB_USER};password=${DB_PASSWORD}
+      - ConnectionStrings:RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@RabbitMQ:5672/
+      - JwtKey=${JWT_KEY}
+    ports:
+      - 5001:8080
+
+  content-manager-ws:
+    restart: always
+    container_name: ContentManager-WS
+    extends:
+      file: ./ContentManager/docker-compose.yml
+      service: contentmanager.worker
+    depends_on:
+      rabbitmq:
+        condition: service_started
+        restart: true
+    environment:
+      - ConnectionStrings:Database=server=${DB_HOST};database=ContentManagement;user=${DB_USER};password=${DB_PASSWORD}
+      - ConnectionStrings:RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@RabbitMQ:5672/
+
+  #Channel Management Micro Services Configuration
+  channel-manager-api:
+    restart: always
+    container_name: ChannelManager-API
+    extends:
+      file: ./ChannelManager/docker-compose.yml
+      service: channelmanager.api
+    ports:
+      - 5002:8080
+    environment:
+      - ConnectionStrings:Database=server=${DB_HOST};database=ChannelManagement;user=${DB_USER};password=${DB_PASSWORD}
+      - ConnectionStrings:RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@RabbitMQ:5672/
+      - JwtKey=${JWT_KEY}
+      - Channels:Telegram=${TELEGRAM_KEY}
+    depends_on:
+      rabbitmq:
+        condition: service_started
+        restart: true
+
+  channel-manager-ws:
+    container_name: ChannelManager-WS
+    restart: always
+    extends:
+      file: ./ChannelManager/docker-compose.yml
+      service: channelmanager.worker
+    environment:
+      - ConnectionStrings:Database=server=${DB_HOST};database=ChannelManagement;user=${DB_USER};password=${DB_PASSWORD}
+      - ConnectionStrings:RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@RabbitMQ:5672/
+      - Channels:Telegram=${TELEGRAM_KEY}
+    depends_on:
+      rabbitmq:
+        condition: service_started
+        restart: true

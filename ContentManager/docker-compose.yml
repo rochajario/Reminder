@@ -2,13 +2,17 @@ version: '3.4'
 
 services:
   contentmanager.api:
-    image: ${DOCKER_REGISTRY-}contentmanagerapi
+    image: ${DOCKER_REGISTRY-}content-manager-api
+    container_name: ContentManager-API
     build:
       context: .
       dockerfile: ContentManager.Api/Dockerfile
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
 
   contentmanager.worker:
     image: ${DOCKER_REGISTRY-}contentmanagerworker
+    container_name: ContentManager-WS
     build:
       context: .
       dockerfile: ContentManager.Worker/Dockerfile

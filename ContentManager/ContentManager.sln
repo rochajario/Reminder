@@ -5,7 +5,11 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3D3CD700-CF83-436C-AA97-D47DAB7E321F}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.env = .env
+		compose.development.yml = compose.development.yml
 		README.md = README.md
+		sample.env = sample.env
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentManager.Data", "ContentManager.Data\ContentManager.Data.csproj", "{B59A31A3-C667-433A-94CF-3DAA70266D9F}"

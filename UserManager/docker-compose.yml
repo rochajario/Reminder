@@ -2,7 +2,11 @@ version: '3.4'
 
 services:
   usermanager.api:
-    image: ${DOCKER_REGISTRY-}usermanagerapi
+    image: ${DOCKER_REGISTRY-}user-manager-api
+    container_name: UserManager-API
     build:
       context: .
       dockerfile: UserManager.Api/Dockerfile
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
+    

@@ -31,12 +31,13 @@ namespace ContentManager.Domain.Services
                 select new Reminder
                 {
                     Id = r.Id,
+                    UserId = r.UserId,
                     Content = r.Content
                 })
                 .AsNoTracking()
                 .ToList();
 
-            if (reminders.Any())
+            if (reminders is not null)
             {
                 PublishReminders(reminders, targetInterval);
             }

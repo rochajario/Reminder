@@ -5,6 +5,7 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C1A9DCEC-97D5-43DE-8032-001D440E76AB}"
 	ProjectSection(SolutionItems) = preProject
+		compose.development.yml = compose.development.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
