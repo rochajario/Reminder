@@ -1,0 +1,31 @@
+name: Build And Publish
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deployment_job:
+      name: Transfer Files
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@master
+
+      - name: Copy Files to Target Folder
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          user: ${{ secrets.VPS_USER }}
+          pass: ${{ secrets.VPS_PASSWORD }}
+          connect_timeout: 10s
+          scp: |
+            './*' => ${{ secrets.VPS_TARGET }} 
+
+      - name: Build and Publish to Production
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            sh ${{ secrets.VPS_TARGET }}deploy-production.sh -u ${{ secrets.DB_USER }} -p ${{ secrets.DB_PASSWORD }} -s ${{ secrets.DB_SCHEMA }} -t ${{ secrets.VPS_TARGET }}
