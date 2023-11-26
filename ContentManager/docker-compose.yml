@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   contentmanager.api:
-    image: ${DOCKER_REGISTRY-}content-manager-api
+    image: remindme-content_manager_api
     container_name: ContentManager-API
     build:
       context: .
@@ -11,7 +11,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
 
   contentmanager.worker:
-    image: ${DOCKER_REGISTRY-}contentmanagerworker
+    image: remindme-content_manager_worker
     container_name: ContentManager-WS
     build:
       context: .
