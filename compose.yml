@@ -28,7 +28,7 @@ services:
       - ConnectionStrings:Database=server=${DB_HOST};database=UserManagement;user=${DB_USER};password=${DB_PASSWORD}
       - JwtKey=${JWT_KEY}
     ports:
-      - 5000:8080
+      - 5001:8080
 
   #Content Management Micro Services Configuration
   content-manager-api:
@@ -40,13 +40,12 @@ services:
     depends_on:
       rabbitmq:
         condition: service_started
-        restart: true
     environment:
       - ConnectionStrings:Database=server=${DB_HOST};database=ContentManagement;user=${DB_USER};password=${DB_PASSWORD}
       - ConnectionStrings:RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@RabbitMQ:5672/
       - JwtKey=${JWT_KEY}
     ports:
-      - 5001:8080
+      - 5002:8080
 
   content-manager-ws:
     restart: always
@@ -57,7 +56,6 @@ services:
     depends_on:
       rabbitmq:
         condition: service_started
-        restart: true
     environment:
       - ConnectionStrings:Database=server=${DB_HOST};database=ContentManagement;user=${DB_USER};password=${DB_PASSWORD}
       - ConnectionStrings:RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@RabbitMQ:5672/
@@ -70,7 +68,7 @@ services:
       file: ./ChannelManager/docker-compose.yml
       service: channelmanager.api
     ports:
-      - 5002:8080
+      - 5003:8080
     environment:
       - ConnectionStrings:Database=server=${DB_HOST};database=ChannelManagement;user=${DB_USER};password=${DB_PASSWORD}
       - ConnectionStrings:RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@RabbitMQ:5672/
@@ -79,7 +77,6 @@ services:
     depends_on:
       rabbitmq:
         condition: service_started
-        restart: true
 
   channel-manager-ws:
     container_name: ChannelManager-WS
@@ -94,4 +91,3 @@ services:
     depends_on:
       rabbitmq:
         condition: service_started
-        restart: true
