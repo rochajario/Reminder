@@ -28,4 +28,4 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            sh ${{ secrets.VPS_TARGET }}deploy.sh -u ${{ secrets.DB_USER }} -p ${{ secrets.DB_PASSWORD }} -h ${{ secrets.DB_HOST }} -t ${{ secrets.TELEGRAM_KEY }} -r ${{secrets.RABBITMQ_CONF}}
+            sh ${{ secrets.VPS_TARGET }}deploy.sh -d ${{secrets.VPS_TARGET}} -u ${{ secrets.DB_USER }} -p ${{ secrets.DB_PASSWORD }} -h ${{ secrets.DB_HOST }} -t ${{ secrets.TELEGRAM_KEY }} -r ${{secrets.RABBITMQ_CONF}}

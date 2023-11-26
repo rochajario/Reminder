@@ -3,6 +3,7 @@
 # ~ Important Information
 
 #Required Parameters:
+# -d Dist Folder
 # -h Database Host
 # -u Database User
 # -p Database Password
@@ -16,9 +17,10 @@ getRandomJwtSecret()
 }
 
 getRandomJwtSecret
-while getopts u:p:h:t:r:m flag
+while getopts d:u:p:h:t:r:m flag
 do
     case "${flag}" in
+        d) dist_folder=${OPTARG};;
         u) db_user=${OPTARG};;
         p) db_password=${OPTARG};;
         h) db_host=${OPTARG};;
@@ -28,6 +30,7 @@ do
 done
 
 echo "Entering Dist Folder..."
+cd $dist_folder
 echo $PWD;
 echo;
 
@@ -41,7 +44,7 @@ echo RABBITMQ_USER=$rabbit_config >> .env
 echo RABBITMQ_PASSWORD=$rabbit_config >> .env
 
 echo "Renewing Docker Compose Workload..."
-docker stop $(docker ps -a -q)
+docker stop $(docker ps -a | grep remindme* | awk '{print $1}')
 docker images -a | grep "^remindme*" | awk '{print $3}' | xargs docker rmi -f
 docker compose -f compose.yml down
 docker compose -f compose.yml --env-file .env up --detach
